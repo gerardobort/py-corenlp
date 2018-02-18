@@ -36,21 +36,25 @@ class StanfordCoreNLP:
                 pass
         return output
 
-    def tokensregex(self, text, pattern, filter):
-        return self.regex('/tokensregex', text, pattern, filter)
+    def tokensregex(self, text, pattern, filter, properties = None):
+        return self.regex('/tokensregex', text, pattern, filter, properties)
 
-    def semgrex(self, text, pattern, filter):
-        return self.regex('/semgrex', text, pattern, filter)
+    def semgrex(self, text, pattern, filter, properties = None):
+        return self.regex('/semgrex', text, pattern, filter, properties)
 
-    def regex(self, endpoint, text, pattern, filter):
+    def regex(self, endpoint, text, pattern, filter, properties = None):
+        assert isinstance(text, str)
+        data = text.encode()
         r = requests.get(
             self.server_url + endpoint, params={
-                'pattern':  pattern,
+                'pattern': pattern,
+                'properties': str(properties or {}),
                 'filter': filter
-            }, data=text)
+            }, data=data)
+        r.encoding = 'utf-8'
         output = r.text
         try:
-            output = json.loads(r.text)
+            output = json.loads(r.text, encoding='utf-8', strict=True)
         except:
             pass
         return output

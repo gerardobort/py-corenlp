@@ -14,3 +14,8 @@ if __name__ == '__main__':
     print(output)
     output = nlp.semgrex(text, pattern='{tag: VBD}', filter=False)
     print(output)
+    output = nlp.semgrex(text, pattern='{ner: PERS}', filter=False, properties={
+        'annotators': 'tokenize,ssplit,ner,depparse',
+        'pipelineLanguage': 'en',
+    })
+    print(output)
